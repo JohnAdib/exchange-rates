@@ -1,0 +1,38 @@
+# version of compose
+version: "3.8"
+# name: exchange-rates
+# list of volumes and named them
+volumes:
+  # ********** nginx
+  nginx_log:
+  # ********** mysql
+  mysql_lib:
+networks:
+  qanat:
+    driver: bridge
+# list of services
+services:
+  # -------------------------------------------------- phalcon
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    hostname: ${NGINX_HOSTNAME}
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    tty: true
+    extra_hosts:
+      - "exchange-rates.local:host-gateway"
+    volumes:
+      # - nginx_log:/var/log/nginx
+      - ./src/:/var/www/html/
+    environment:
+      TZ: ${TIMEZONE}
+    networks:
+      - qanat
+    depends_on:
+      - php
+# eol

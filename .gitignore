@@ -1,0 +1,3 @@
+.idea/
+# git ignore .env file because of mysql password
+/.env
