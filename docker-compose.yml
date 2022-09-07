@@ -1,38 +1,28 @@
-# version of compose
-version: "3.8"
-# name: exchange-rates
-# list of volumes and named them
-volumes:
-  # ********** nginx
-  nginx_log:
-  # ********** mysql
-  mysql_lib:
-networks:
-  qanat:
-    driver: bridge
-# list of services
+version: "3"
+
 services:
-  # -------------------------------------------------- phalcon
-  nginx:
-    container_name: nginx
-    build:
-      context: .
-      dockerfile: ./docker/nginx/Dockerfile
-    hostname: ${NGINX_HOSTNAME}
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    tty: true
-    extra_hosts:
-      - "exchange-rates.local:host-gateway"
+  app:
+    container_name: app
+    build: .
+    working_dir: /var/www/html
     volumes:
-      # - nginx_log:/var/log/nginx
-      - ./src/:/var/www/html/
-    environment:
-      TZ: ${TIMEZONE}
-    networks:
-      - qanat
+      - ./:/var/www/html
+    ports:
+      - "8080:80"
+    expose:
+      - "8080"
     depends_on:
-      - php
-# eol
+      - mysql
+    links:
+      - mysql
+
+  mysql:
+    container_name: mysql
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: phalcon_app
+      MYSQL_ROOT_PASSWORD: root
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    ports:
+      - "3306:3306"
