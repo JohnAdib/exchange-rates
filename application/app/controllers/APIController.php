@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use Phalcon\Http\Response;
@@ -35,8 +36,7 @@ class APIController extends \Phalcon\Mvc\Controller
 
             // check api key
             $Exchangerates_API_KEY = $this->config->application->EXCHANGERATES_API_KEY;
-            if($Exchangerates_API_KEY)
-            {
+            if ($Exchangerates_API_KEY) {
                 $baseCurrency = $request->getQuery('base', null, 'USD');
                 $baseCurrency = 'USD';
                 // call model to get data
@@ -46,8 +46,7 @@ class APIController extends \Phalcon\Mvc\Controller
                 // Set status code
                 $response->setStatusCode(200, 'OK');
                 // Set the content of the response
-                $response->setJsonContent(["status" => true, "error" => false, "data" => $returnData ]);
-
+                $response->setJsonContent(["status" => true, "error" => false, "data" => $returnData]);
             } else {
                 // Set status code
                 $response->setStatusCode(406, 'Not Acceptable');

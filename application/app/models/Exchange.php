@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace models;
@@ -13,8 +14,8 @@ class Exchange extends \Phalcon\Mvc\Model
         $symbols = new Symbols();
         $mySymbolsList = implode(',', $symbols->getFamous());
 
-        $ExchangeRatesApi = new ExchangeRatesApi();
-        $result = $ExchangeRatesApi->getAll($API_KEY, $baseCurrency, $mySymbolsList);
+        $ExchangeRatesApi = new ExchangeRatesApi($API_KEY);
+        $result = $ExchangeRatesApi->fetch($baseCurrency, $mySymbolsList);
 
 
         // Use Model for database Query
@@ -27,5 +28,4 @@ class Exchange extends \Phalcon\Mvc\Model
 
         return $returnData;
     }
-
 }
