@@ -34,7 +34,7 @@ class APIController extends \Phalcon\Mvc\Controller
             // Check whether the request was made with Ajax ( $request->isAjax() )
 
             // check api key
-            $Exchangerates_API_KEY = $this->config->application->Exchangerates_API_KEY;
+            $Exchangerates_API_KEY = $this->config->application->EXCHANGERATES_API_KEY;
             if(!$Exchangerates_API_KEY)
             {
                 // Set status code
