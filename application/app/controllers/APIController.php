@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 use Phalcon\Http\Response;
 use Phalcon\Http\Request;
-use data\Exchange;
-use xchange\Symbols;
+use models\Exchange;
+
 
 class APIController extends \Phalcon\Mvc\Controller
 {
@@ -35,46 +35,29 @@ class APIController extends \Phalcon\Mvc\Controller
 
             // check api key
             $Exchangerates_API_KEY = $this->config->application->EXCHANGERATES_API_KEY;
-            if(!$Exchangerates_API_KEY)
+            if($Exchangerates_API_KEY)
             {
+                // call model to get data
+                $exchange = new Exchange();
+                $returnData = $exchange->load($Exchangerates_API_KEY);
+
                 // Set status code
-                $response->setStatusCode(405, 'Method Not Allowed');
+                $response->setStatusCode(200, 'OK');
                 // Set the content of the response
-                // $response->setContent("Sorry, the page doesn't exist");
-                $response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
-                // Send response to the client
-                $response->send();
-                return;
+                $response->setJsonContent(["status" => true, "error" => false, "data" => $returnData ]);
+
+            } else {
+                // Set status code
+                $response->setStatusCode(406, 'Not Acceptable');
+                // Set the content of the response
+                $response->setJsonContent(["status" => false, "error" => "Not Acceptable"]);
             }
-
-            // call model to get data
-            $exchange = new Exchange($Exchangerates_API_KEY);
-            $symbols = new Symbols();
-
-
-            // Use Model for database Query
-            $returnData = [
-                "name" => "MrAdib",
-                "test" => $exchange->aaa(),
-                "symbols" => $symbols->getFamous(),
-                "api" => $this->config->application->Exchangerates_API_KEY,
-            ];
-
+        } else {
             // Set status code
-            $response->setStatusCode(200, 'OK');
+            $response->setStatusCode(405, 'Method Not Allowed');
             // Set the content of the response
-            $response->setJsonContent(["status" => true, "error" => false, "data" => $returnData ]);
-            // Send response to the client
-            $response->send();
-            return;
-
+            $response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         }
-
-        // Set status code
-        $response->setStatusCode(405, 'Method Not Allowed');
-        // Set the content of the response
-        // $response->setContent("Sorry, the page doesn't exist");
-        $response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
         // Send response to the client
         $response->send();
     }
