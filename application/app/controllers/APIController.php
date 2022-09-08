@@ -37,9 +37,11 @@ class APIController extends \Phalcon\Mvc\Controller
             $Exchangerates_API_KEY = $this->config->application->EXCHANGERATES_API_KEY;
             if($Exchangerates_API_KEY)
             {
+                $baseCurrency = $request->getQuery('base', null, 'USD');
+                $baseCurrency = 'USD';
                 // call model to get data
                 $exchange = new Exchange();
-                $returnData = $exchange->load($Exchangerates_API_KEY);
+                $returnData = $exchange->load($Exchangerates_API_KEY, $baseCurrency);
 
                 // Set status code
                 $response->setStatusCode(200, 'OK');
