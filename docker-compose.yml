@@ -11,3 +11,7 @@ services:
       - "8080:80"
     expose:
       - "8080"
+    environment:
+      TZ: ${TIMEZONE}
+      Exchangerates_API_KEYTZ: ${Exchangerates_API_KEY}
+      MrAdib: True
