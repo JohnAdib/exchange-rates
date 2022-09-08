@@ -7,5 +7,7 @@
             "name": "Javad Adib"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "phalcon/devtools": "^4.2"
+    }
 }
