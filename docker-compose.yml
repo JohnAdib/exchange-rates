@@ -3,7 +3,8 @@ version: "3"
 services:
   app:
     container_name: app
-    build: .
+    image: mradib/nginx-php7.4-phalcon4.0.5
+    restart: on-failure
     working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
