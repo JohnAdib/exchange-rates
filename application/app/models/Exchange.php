@@ -88,8 +88,12 @@ class Exchange extends \Phalcon\Mvc\Model
     {
         $request = new Request();
         $baseCurrency = $request->getQuery('base', null, 'USD');
-        // $baseCurrency = 'USD';
-        return $baseCurrency;
+
+        if (!Symbols::isSymbolExist($baseCurrency)) {
+            $baseCurrency = "USD";
+        }
+
+        return strtoupper($baseCurrency);
     }
 
     private function getForce()
