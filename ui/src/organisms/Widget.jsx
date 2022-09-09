@@ -4,10 +4,8 @@ export default function Widget(props) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [apiData, setApiData] = useState([]);
+  const baseCurrency = "USD";
 
-  // Note: the empty deps array [] means
-  // this useEffect will run once
-  // similar to componentDidMount()
   useEffect(() => {
     fetch("http://localhost:8022/api")
       .then((res) => res.json())
@@ -16,9 +14,6 @@ export default function Widget(props) {
           setIsLoaded(true);
           setApiData(result);
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           setIsLoaded(true);
           setError(error);
@@ -35,17 +30,29 @@ export default function Widget(props) {
   } else {
     const myRates = apiData.latest.rates;
 
-    const itemsEl = Object.entries(myRates).map((currency, index) => (
-      <li key={currency[0]} className="flex px-2 hover:bg-black/10 transition" title={currency[0]}>
-        <div className="grow">{apiData.symbols[currency[0]]}</div>
-        <div>{currency[1]}</div>
-      </li>
-    ));
+    const itemsEl = Object.entries(myRates).map((item, index) => {
+      const currency = item[0];
+      if (currency === baseCurrency) {
+        return "";
+      }
+      return (
+        <li key={currency} className="flex px-2 hover:bg-black/10 transition" title={currency}>
+          <div className="grow font-light">{apiData.symbols[currency]}</div>
+          <div className="">{item[1]}</div>
+        </li>
+      );
+    });
 
     return (
-      <div className="mx-auto max-w-sm p-2">
-        <ul className=" rounded bg-slate-100 leading-7 select-none">{itemsEl}</ul>
-      </div>
+      <section className="widget max-w-sm m-2 border rounded border-lime-600">
+        <header className="bg-lime-600 text-white px-2 leading-10">
+          <h2>{apiData.symbols[baseCurrency]} Exchange Rate</h2>
+        </header>
+        <ul className=" rounded overflow-hidden leading-7 select-none transition hover:bg-slate-50">
+          <li className="px-2 text-right font-semibold">1 {baseCurrency} =</li>
+          {itemsEl}
+        </ul>
+      </section>
     );
   }
 }
