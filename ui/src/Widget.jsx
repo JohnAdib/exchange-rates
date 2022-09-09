@@ -1,41 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { SampleData } from "../pages/SampleData.js";
+import { SampleData } from "./SampleData.js";
 
 export default function Widget(props) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [apiData, setApiData] = useState([]);
   const [baseCurrency, setBaseCurrency] = useState("USD");
-  //   const baseCurrency = "USD";
-  const everyCheckInterval = 1000 * 60; // 60 sec = 1 min
 
   // once on start
   useEffect(() => {
+    const everyCheckInterval = 1000 * 60; // 60 sec = 1 min
     getDataFromApi();
     // set interval
+    function getDataFromApi() {
+      const apiUrl = "http://localhost:8022/api?base=" + baseCurrency;
+      fetch(apiUrl)
+        .then((res) => res.json())
+        .then(
+          (result) => {
+            setIsLoaded(true);
+            setApiData(result);
+            console.log(result);
+          },
+          (error) => {
+            setIsLoaded(true);
+            setApiData(SampleData);
+            setError(error);
+          }
+        );
+    }
     const interval = setInterval(getDataFromApi, everyCheckInterval);
     // This represents the unmount function,
     // in which you need to clear your interval to prevent memory leaks.
     return () => clearInterval(interval);
   }, [baseCurrency]);
-
-  function getDataFromApi() {
-    const apiUrl = "http://localhost:8022/api?base=" + baseCurrency;
-    fetch(apiUrl)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setApiData(result);
-          console.log(result);
-        },
-        (error) => {
-          setIsLoaded(true);
-          setApiData(SampleData);
-          setError(error);
-        }
-      );
-  }
 
   if (!isLoaded) {
     return <div className="py-2 px-4 leading-10">Loading...</div>;
@@ -80,7 +78,9 @@ export default function Widget(props) {
   return (
     <section className="widget max-w-sm m-2 border rounded leading-7 select-none border-lime-600">
       <header className="bg-lime-600 text-white px-2 leading-10">
-        <h2>{apiData.symbols[baseCurrency]} Exchange Rates</h2>
+        <h2>
+          <span class="font-bold">{apiData.symbols[baseCurrency]}</span> Exchange Rates
+        </h2>
       </header>
       <ul className=" rounded overflow-hidden transition hover:bg-slate-50">
         <li className="px-2 text-right font-semibold">1 {baseCurrency} =</li>
