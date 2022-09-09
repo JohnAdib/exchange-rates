@@ -44,7 +44,10 @@ export default function Widget(props) {
   const myRates = apiData.latest.rates;
   const itemsEl = Object.entries(myRates).map((item, index) => {
     const currency = item[0];
-    const exchangeRate = Math.round((item[1] + Number.EPSILON) * 1000) / 1000;
+    const exchangeRate = item[1];
+    const exchangeRateShow =
+      exchangeRate < 0.1 ? exchangeRate : Math.round((item[1] + Number.EPSILON) * 1000) / 1000;
+
     if (currency === baseCurrency) {
       return "";
     }
@@ -58,7 +61,7 @@ export default function Widget(props) {
         >
           {apiData.symbols[currency]}
         </div>
-        <div className="">{exchangeRate}</div>
+        <div className="">{exchangeRateShow}</div>
       </li>
     );
   });
