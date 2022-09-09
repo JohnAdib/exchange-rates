@@ -58,10 +58,10 @@ class Exchange extends \Phalcon\Mvc\Model
         $status = 200;
         $error = false;
         $apiResult = null;
-        $apiKey = $this->getApiKey();
-        $baseCurrency = $this->getBase();
 
         try {
+            $apiKey = $this->getApiKey();
+            $baseCurrency = $this->getBase();
             // get data from API
             $ExchangeRatesApi = new ExchangeRatesApi($apiKey);
             $ExchangeRatesApi->setBase($baseCurrency);
@@ -85,7 +85,7 @@ class Exchange extends \Phalcon\Mvc\Model
         return $returnData;
     }
 
-    private function getBase()
+    private function getBase(): string
     {
         $request = new Request();
         $baseCurrency = $request->getQuery('base', null, 'USD');
@@ -97,27 +97,21 @@ class Exchange extends \Phalcon\Mvc\Model
         return strtoupper($baseCurrency);
     }
 
-    private function getForce()
+    private function getForce(): string
     {
         $request = new Request();
-        $forceMode = $request->getQuery('force', null, false);
+        $forceMode = $request->getQuery('force', null, "");
         return $forceMode;
     }
 
 
-    private function getApiKey()
+    private function getApiKey(): string
     {
         $config = Di::getDefault()->getShared('config');
         $Exchangerates_API_KEY = $config->application->EXCHANGERATES_API_KEY;
 
         if (!$Exchangerates_API_KEY) {
-            $error = [
-                "okay" => false,
-                "status" => 406,
-                "error" => 'Not Acceptable - API KEY NOT FOUND',
-            ];
-
-            return $error;
+            throw new \Exception('Not Acceptable - API KEY NOT FOUND');
         }
         return $Exchangerates_API_KEY;
     }
