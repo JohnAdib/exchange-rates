@@ -46,18 +46,18 @@ class APIController extends \Phalcon\Mvc\Controller
                 // Set status code
                 $response->setStatusCode(200, 'OK');
                 // Set the content of the response
-                $response->setJsonContent(["status" => true, "error" => false, "data" => $returnData]);
+                $response->setJsonContent($returnData);
             } else {
                 // Set status code
                 $response->setStatusCode(406, 'Not Acceptable');
                 // Set the content of the response
-                $response->setJsonContent(["status" => false, "error" => "Not Acceptable"]);
+                $response->setJsonContent(["okay" => false, "error" => "Not Acceptable"]);
             }
         } else {
             // Set status code
             $response->setStatusCode(405, 'Method Not Allowed');
             // Set the content of the response
-            $response->setJsonContent(["status" => false, "error" => "Method Not Allowed"]);
+            $response->setJsonContent(["okay" => false, "error" => "Method Not Allowed"]);
         }
         // Send response to the client
         $response->send();

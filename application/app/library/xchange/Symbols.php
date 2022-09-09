@@ -202,4 +202,17 @@ class Symbols
 
         return null;
     }
+
+    public static function getFiltered(array $whitelist): ?array
+    {
+        $result = [];
+
+        foreach ($whitelist as $value) {
+            if (isset(self::SYMBOL_LIST[$value])) {
+                $result[$value] = self::SYMBOL_LIST[$value];
+            }
+        }
+
+        return $result;
+    }
 }

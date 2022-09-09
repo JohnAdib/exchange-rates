@@ -16,26 +16,26 @@ class Exchange extends \Phalcon\Mvc\Model
 
     public function load(string $API_KEY, string $baseCurrency): array
     {
+        $status = true;
+        $error = false;
+        $apiResult = null;
         try {
             // get data from API
             $ExchangeRatesApi = new ExchangeRatesApi($API_KEY);
             $ExchangeRatesApi->setBase($baseCurrency);
             $ExchangeRatesApi->setSymbols(self::SELECTED_SYMBOLS);
-            $ExchangeRatesApi->fetch();
-            $result = $ExchangeRatesApi->getResponseJson();
+            // $ExchangeRatesApi->fetch();
+            $apiResult = $ExchangeRatesApi->getResponseJson();
         } catch (\Exception $e) {
-            // passed error to controller
-            throw new \Exception($e->getMessage());
+            $status = false;
+            $error = $e->getMessage();
         }
 
-
-
-        // Use Model for database Query
         $returnData = [
-            "base" => $ExchangeRatesApi->getBase(),
-            "symbols" => $ExchangeRatesApi->getSymbols(),
-            // "symbolsList" => $mySymbolsList,
-            "result" => $result
+            "okay" => $status,
+            "error" => $error,
+            "latest" => $apiResult,
+            "symbols" => Symbols::getFiltered(self::SELECTED_SYMBOLS),
         ];
 
         return $returnData;
