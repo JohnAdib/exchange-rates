@@ -37,9 +37,9 @@ At the template stage, we break our chemistry analogy to get into language that 
 
 Pages are specific instances of templates. Here, placeholder content is replaced with real representative content to give an accurate depiction of what a user will ultimately see.
 
-# Installation
+## Installation
 
-## Install Dependencies - Docker & git
+### Install Dependencies - Docker & git
 
 First, update your existing list of packages
 
@@ -71,7 +71,7 @@ Finally, install Docker, Docker compose and Git
 
 First clone this respository from github with below command
 
-## Install Project - Clone Git repository and set API key in `.env`
+### Install Project - Clone Git repository and set API key in `.env`
 
 Clone the repository somewhere with below command.
 
@@ -93,7 +93,7 @@ Try to run docker. it takes some minute to do everything. `-d` for detached mode
 
 Now open browser and go to <http://localhost:8022>. port `8022` is set inside `docker-compose.yml`
 
-## Run frontend
+### Run frontend
 
 Go to ui folder with below command
 
@@ -109,7 +109,7 @@ Then run npm
 
 Browser automatically open a new link to <http://localhost:3000>
 
-## Run backend tests
+### Run backend tests
 
 Backend tests written with PHPUnit. To run tests on backend, use below command
 
