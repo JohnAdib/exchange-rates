@@ -5,20 +5,23 @@ export default function Widget(props) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [apiData, setApiData] = useState([]);
-  const baseCurrency = "USD";
+  const [baseCurrency, setBaseCurrency] = useState("USD");
+  //   const baseCurrency = "USD";
   const everyCheckInterval = 1000 * 60; // 60 sec = 1 min
 
   // once on start
   useEffect(() => {
     getDataFromApi();
-
+    // set interval
     const interval = setInterval(getDataFromApi, everyCheckInterval);
-    // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+    // This represents the unmount function,
+    // in which you need to clear your interval to prevent memory leaks.
     return () => clearInterval(interval);
-  }, []);
+  }, [baseCurrency]);
 
   function getDataFromApi() {
-    fetch("http://localhost:8022/api")
+    const apiUrl = "http://localhost:8022/api?base=" + baseCurrency;
+    fetch(apiUrl)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -39,7 +42,6 @@ export default function Widget(props) {
   }
 
   const myRates = apiData.latest.rates;
-
   const itemsEl = Object.entries(myRates).map((item, index) => {
     const currency = item[0];
     const exchangeRate = Math.round((item[1] + Number.EPSILON) * 1000) / 1000;
@@ -48,7 +50,14 @@ export default function Widget(props) {
     }
     return (
       <li key={currency} className="flex px-2 hover:bg-black/10 transition" title={currency}>
-        <div className="grow font-light">{apiData.symbols[currency]}</div>
+        <div
+          className="grow font-light cursor-pointer"
+          onClick={() => {
+            setBaseCurrency(currency);
+          }}
+        >
+          {apiData.symbols[currency]}
+        </div>
         <div className="">{exchangeRate}</div>
       </li>
     );

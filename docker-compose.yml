@@ -1,5 +1,4 @@
 version: "3"
-
 services:
   app:
     container_name: app
@@ -13,6 +12,6 @@ services:
     expose:
       - "8022"
     environment:
-      TZ: ${TIMEZONE}
+      # TZ: ${TIMEZONE}
       EXCHANGERATES_API_KEY: ${EXCHANGERATES_API_KEY}
       MrAdib: True
