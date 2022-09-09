@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Popover } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -29,7 +30,11 @@ function ChevronUpIcon(props) {
 
 function MobileNavLink({ children, ...props }) {
   return (
-    <Popover.Button className="block text-base leading-7 tracking-tight text-gray-700" {...props}>
+    <Popover.Button
+      as={Link}
+      className="block text-base leading-7 tracking-tight text-gray-700"
+      {...props}
+    >
       {children}
     </Popover.Button>
   );

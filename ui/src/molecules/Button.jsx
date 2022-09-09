@@ -26,7 +26,7 @@ export const Button = forwardRef(function Button(
   className = clsx(baseStyles[variant], variantStyles[variant][color], className);
 
   return href ? (
-    <Link ref={ref} href={href} className={className} {...props} />
+    <a ref={ref} href={href} className={className} {...props} />
   ) : (
     <button ref={ref} className={className} {...props} />
   );
