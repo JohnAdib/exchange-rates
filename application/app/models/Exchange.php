@@ -34,6 +34,11 @@ class Exchange extends \Phalcon\Mvc\Model
 
         // cache each type of symbols
         $cacheName = 'apiData-' . $this->getBase();
+
+        // if request force mode, delete cache
+        if ($this->getForce()) {
+            $cache->delete($cacheName);
+        }
         // read from cache
         $cachedData = $cache->get($cacheName);
         if (isset($cachedData)) {
@@ -61,7 +66,7 @@ class Exchange extends \Phalcon\Mvc\Model
             $ExchangeRatesApi = new ExchangeRatesApi($apiKey);
             $ExchangeRatesApi->setBase($baseCurrency);
             $ExchangeRatesApi->setSymbols(self::SELECTED_SYMBOLS);
-            // $ExchangeRatesApi->fetch();
+            $ExchangeRatesApi->fetch();
             $apiResult = $ExchangeRatesApi->getResponseJson();
         } catch (\Exception $e) {
             $okay = false;
@@ -86,6 +91,14 @@ class Exchange extends \Phalcon\Mvc\Model
         // $baseCurrency = 'USD';
         return $baseCurrency;
     }
+
+    private function getForce()
+    {
+        $request = new Request();
+        $forceMode = $request->getQuery('force', null, false);
+        return $forceMode;
+    }
+
 
     private function getApiKey()
     {
