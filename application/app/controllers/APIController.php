@@ -34,25 +34,14 @@ class APIController extends \Phalcon\Mvc\Controller
         if ($request->isGet()) {
             // Check whether the request was made with Ajax ( $request->isAjax() )
 
-            // check api key
-            $Exchangerates_API_KEY = $this->config->application->EXCHANGERATES_API_KEY;
-            if ($Exchangerates_API_KEY) {
-                $baseCurrency = $request->getQuery('base', null, 'USD');
-                $baseCurrency = 'USD';
-                // call model to get data
-                $exchange = new Exchange();
-                $returnData = $exchange->load($Exchangerates_API_KEY, $baseCurrency);
+            // call model to get data
+            $exchange = new Exchange();
+            $returnData = $exchange->load();
 
-                // Set status code
-                $response->setStatusCode(200, 'OK');
-                // Set the content of the response
-                $response->setJsonContent($returnData);
-            } else {
-                // Set status code
-                $response->setStatusCode(406, 'Not Acceptable');
-                // Set the content of the response
-                $response->setJsonContent(["okay" => false, "error" => "Not Acceptable"]);
-            }
+            // Set status code
+            $response->setStatusCode($returnData['status'], $returnData['error']);
+            // Set the content of the response
+            $response->setJsonContent($returnData);
         } else {
             // Set status code
             $response->setStatusCode(405, 'Method Not Allowed');

@@ -4,8 +4,15 @@ declare(strict_types=1);
 
 namespace models;
 
+use Phalcon\Di;
+use Phalcon\Config;
+use Phalcon\Http\Request;
+use Phalcon\Cache;
+use Phalcon\Cache\AdapterFactory;
+use Phalcon\Storage\SerializerFactory;
 use xchange\Symbols;
 use xchange\ExchangeRatesApi;
+
 
 class Exchange extends \Phalcon\Mvc\Model
 {
@@ -14,30 +21,92 @@ class Exchange extends \Phalcon\Mvc\Model
         'JPY', 'CNY', 'RUB', 'IRR', 'AED', 'TRY', 'IQD', 'INR',
     ];
 
-    public function load(string $API_KEY, string $baseCurrency): array
+    public function load1()
     {
-        $status = true;
+        $serializerFactory = new SerializerFactory();
+        $adapterFactory    = new AdapterFactory($serializerFactory);
+
+        $options = [
+            'defaultSerializer' => 'Json',
+            'lifetime'          => 60 * 60 * 5 // 18000
+        ];
+
+        $adapter = $adapterFactory->newInstance('apcu', $options);
+
+        $cache = new Cache($adapter);
+
+
+        $cachedValue = $cache->get('apiData');
+
+        var_dump($cachedValue);
+
+        if (!cachedValue) {
+            $apiData = self::getDataFromApi();
+            $result = $cache->set('apiData', $apiData);
+            var_dump($result);
+        }
+    }
+
+
+    public function load(): array
+    {
+        $okay = true;
+        $status = 200;
         $error = false;
         $apiResult = null;
+        $apiKey = $this->getApiKey();
+        $baseCurrency = $this->getBase();
+
+
         try {
             // get data from API
-            $ExchangeRatesApi = new ExchangeRatesApi($API_KEY);
+            $ExchangeRatesApi = new ExchangeRatesApi($apiKey);
             $ExchangeRatesApi->setBase($baseCurrency);
             $ExchangeRatesApi->setSymbols(self::SELECTED_SYMBOLS);
             // $ExchangeRatesApi->fetch();
             $apiResult = $ExchangeRatesApi->getResponseJson();
         } catch (\Exception $e) {
-            $status = false;
+            $okay = false;
+            $status = 400;
             $error = $e->getMessage();
         }
 
+
         $returnData = [
-            "okay" => $status,
+            "okay" => $okay,
+            "status" => $status,
             "error" => $error,
             "latest" => $apiResult,
             "symbols" => Symbols::getFiltered(self::SELECTED_SYMBOLS),
         ];
 
         return $returnData;
+    }
+
+    private function getBase()
+    {
+        $request = new Request();
+        $baseCurrency = $request->getQuery('base', null, 'USD');
+        // $baseCurrency = 'USD';
+
+        return $baseCurrency;
+    }
+
+    private function getApiKey()
+    {
+        $config = Di::getDefault()->getShared('config');
+        $Exchangerates_API_KEY = $config->application->EXCHANGERATES_API_KEY;
+
+        if (!$Exchangerates_API_KEY) {
+            $error = [
+                "okay" => false,
+                "status" => 406,
+                "error" => 'Not Acceptable - API KEY NOT FOUND',
+            ];
+
+            return $error;
+        }
+
+        return $Exchangerates_API_KEY;
     }
 }
