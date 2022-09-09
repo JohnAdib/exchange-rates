@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { SampleData } from "./SampleData.js";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 export default function Widget(props) {
   const [error, setError] = useState(null);
@@ -52,7 +53,7 @@ export default function Widget(props) {
     return (
       <li key={currency} className="flex px-2 hover:bg-black/10 transition" title={currency}>
         <div
-          className="grow font-light cursor-pointer"
+          className="grow font-light cursor-pointer truncate"
           onClick={() => {
             setBaseCurrency(currency);
           }}
@@ -75,11 +76,31 @@ export default function Widget(props) {
     );
   }
 
+  const renderTime = ({ remainingTime }) => {
+    if (remainingTime === 0) {
+      return <div className="timer">...</div>;
+    }
+    return remainingTime;
+  };
+  const UrgeWithPleasureComponent = () => (
+    <CountdownCircleTimer
+      isPlaying
+      size={32}
+      strokeWidth={3}
+      duration={60}
+      colors={["#65a30d", "#F7B801", "#A30000", "#A30000"]}
+      colorsTime={[40, 20, 10, 0]}
+      onComplete={() => ({ shouldRepeat: true, delay: 1 })}
+    >
+      {renderTime}
+    </CountdownCircleTimer>
+  );
+
   return (
-    <section className="widget max-w-sm m-2 border rounded leading-7 select-none border-lime-600">
+    <section className="widget max-w-sm m-2 border rounded leading-7 bg-white select-none border-lime-600">
       <header className="bg-lime-600 text-white px-2 leading-10">
-        <h2>
-          <span class="font-bold">{apiData.symbols[baseCurrency]}</span> Exchange Rates
+        <h2 className="truncate">
+          <span className="font-bold">{apiData.symbols[baseCurrency]}</span> Exchange Rates
         </h2>
       </header>
       <ul className=" rounded overflow-hidden transition hover:bg-slate-50">
@@ -87,10 +108,13 @@ export default function Widget(props) {
         {itemsEl}
       </ul>
       <footer
-        className="px-2 rounded truncate leading-10 text-xs bg-gray-100 text-gray-500"
+        className="px-2 rounded flex flex-nowrap gap-2 truncate leading-10 text-xs bg-gray-100 text-gray-500"
         title={footerTitle}
       >
-        {footerText}
+        <div className="grow">{footerText}</div>
+        <div className="flex-none py-1">
+          <UrgeWithPleasureComponent></UrgeWithPleasureComponent>
+        </div>
       </footer>
     </section>
   );
