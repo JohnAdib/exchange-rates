@@ -9,9 +9,9 @@ services:
     volumes:
       - ./:/var/www/html
     ports:
-      - "8080:80"
+      - "8022:80"
     expose:
-      - "8080"
+      - "8022"
     environment:
       TZ: ${TIMEZONE}
       EXCHANGERATES_API_KEY: ${EXCHANGERATES_API_KEY}
