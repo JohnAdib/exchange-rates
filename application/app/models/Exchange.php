@@ -78,6 +78,7 @@ class Exchange extends \Phalcon\Mvc\Model
             "okay" => $okay,
             "status" => $status,
             "error" => $error,
+            "lastUpdate" => date('Y-m-d H:i:s'),
             "latest" => $apiResult,
             "symbols" => Symbols::getFiltered(self::SELECTED_SYMBOLS),
         ];
