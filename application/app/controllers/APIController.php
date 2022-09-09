@@ -22,6 +22,9 @@ class APIController extends \Phalcon\Mvc\Controller
         // Disable View File Content
         $this->view->disable();
 
+        // enable CORS
+        $this->response->setHeader('Access-Control-Allow-Origin', '*');
+
         // Getting a response instance
         // https://docs.phalcon.io/4.0/en/response.html
         $response = new Response();
