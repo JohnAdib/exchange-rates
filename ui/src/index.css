@@ -1,3 +1,42 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.@-webkit-keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+.animate-spin-slower {
+  -webkit-animation: spin 6s linear infinite;
+  animation: spin 6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+.animate-spin-slow {
+  -webkit-animation: spin 4s linear infinite;
+  animation: spin 4s linear infinite;
+}
+
+@-webkit-keyframes spin-reverse {
+  to {
+    transform: rotate(-1turn);
+  }
+}
+
+@keyframes spin-reverse {
+  to {
+    transform: rotate(-1turn);
+  }
+}
+
+.animate-spin-reverse-slower {
+  -webkit-animation: spin-reverse 6s linear infinite;
+  animation: spin-reverse 6s linear infinite;
+}

@@ -3,7 +3,7 @@ import { Header } from "../organisms/Header";
 import { Hero } from "../organisms/Hero";
 
 function ExchangeTemplate(props) {
-  const pageStyle = "h-screen overflow-hidden bg-blue-100";
+  const pageStyle = "h-screen overflow-hidden";
 
   return (
     <div className={pageStyle}>

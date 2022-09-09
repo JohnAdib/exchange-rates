@@ -28,7 +28,7 @@ export function PhoneFrame({ className, children, priority = false, ...props }) 
         src={frame}
         alt=""
         className="pointer-events-none absolute inset-0 h-full w-full"
-        unoptimized
+        unoptimized="true"
         priority={priority}
       />
     </div>
