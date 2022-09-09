@@ -51,7 +51,7 @@ export default function Widget(props) {
       return "";
     }
     return (
-      <li key={currency} className="flex px-2 hover:bg-black/10 transition" title={currency}>
+      <li key={currency} className="flex px-4 hover:bg-black/10 transition" title={currency}>
         <div
           className="grow font-light cursor-pointer truncate"
           onClick={() => {
@@ -98,17 +98,17 @@ export default function Widget(props) {
 
   return (
     <section className="widget max-w-sm m-2 border rounded leading-7 bg-white select-none border-lime-600">
-      <header className="bg-lime-600 text-white px-2 leading-10">
+      <header className="bg-lime-600 text-white px-4 leading-10">
         <h2 className="truncate">
           <span className="font-bold">{apiData.symbols[baseCurrency]}</span> Exchange Rates
         </h2>
       </header>
       <ul className=" rounded overflow-hidden transition hover:bg-slate-50">
-        <li className="px-2 text-right font-semibold">1 {baseCurrency} =</li>
+        <li className="px-4 text-right font-semibold">1 {baseCurrency} =</li>
         {itemsEl}
       </ul>
       <footer
-        className="px-2 rounded flex flex-nowrap gap-2 truncate leading-10 text-xs bg-gray-100 text-gray-500"
+        className="px-4 rounded flex flex-nowrap gap-2 truncate leading-10 text-xs bg-gray-100 text-gray-500"
         title={footerTitle}
       >
         <div className="grow">{footerText}</div>
