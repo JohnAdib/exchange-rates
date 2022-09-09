@@ -11,8 +11,8 @@ class ExchangeRatesApi extends AbstractExchangeApi
     public function fetch(): void
     {
         $targetUrl = self::BASE_URL . "latest";
-        $targetUrl .= "?" & "base=" . $this->getBase();
-        $targetUrl .= "&" & "symbols=" . $this->getSymbolsCsv();
+        $targetUrl .= "?" . "base=" . $this->getBase();
+        $targetUrl .= "&" . "symbols=" . $this->getSymbolsCsv();
 
         $curl = curl_init();
         curl_setopt_array(
@@ -34,8 +34,7 @@ class ExchangeRatesApi extends AbstractExchangeApi
                 CURLOPT_CUSTOMREQUEST  => "GET"
             ]
         );
-        // $this->response = curl_exec($curl);
-        $this->response = "123";
+        $this->response = curl_exec($curl);
         $this->responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);

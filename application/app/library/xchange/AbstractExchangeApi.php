@@ -12,8 +12,8 @@ abstract class AbstractExchangeApi
     private string $base = 'USD';
     private array $symbols = [];
     private string $symbolsCsv = "";
-    private string $response = "";
-    private int $responseCode = -1;
+    protected string $response = "";
+    protected int $responseCode = -1;
 
     public function __construct(string $apikey)
     {
@@ -76,7 +76,8 @@ abstract class AbstractExchangeApi
             return $json;
         }
 
-        return [];
+        $errorMsg = "API response is invalid - Header code " . $this->responseCode;
+        throw new \Exception($errorMsg);
     }
 
     abstract public function fetch(): void;
