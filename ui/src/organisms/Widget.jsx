@@ -6,8 +6,18 @@ export default function Widget(props) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [apiData, setApiData] = useState([]);
   const baseCurrency = "USD";
+  const everyCheckInterval = 1000 * 60; // 60 sec = 1 min
 
+  // once on start
   useEffect(() => {
+    getDataFromApi();
+
+    const interval = setInterval(getDataFromApi, everyCheckInterval);
+    // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+    return () => clearInterval(interval);
+  }, []);
+
+  function getDataFromApi() {
     fetch("http://localhost:8022/api")
       .then((res) => res.json())
       .then(
@@ -22,7 +32,7 @@ export default function Widget(props) {
           setError(error);
         }
       );
-  }, []);
+  }
 
   if (!isLoaded) {
     return <div className="py-2 px-4 leading-10">Loading...</div>;
@@ -34,7 +44,7 @@ export default function Widget(props) {
     const currency = item[0];
     const exchangeRate = Math.round((item[1] + Number.EPSILON) * 1000) / 1000;
     if (currency === baseCurrency) {
-      return;
+      return "";
     }
     return (
       <li key={currency} className="flex px-2 hover:bg-black/10 transition" title={currency}>
