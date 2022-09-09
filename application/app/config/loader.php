@@ -7,7 +7,7 @@ $loader = new \Phalcon\Loader();
 $loader->registerNamespaces(
     [
         "models" => $config->application->modelsDir,
-        "xchange" => $config->application->libraryDir
+        "xchange" => $config->application->libraryDir . 'xchange/'
     ]
 );
 

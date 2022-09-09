@@ -14,8 +14,10 @@ class Exchange extends \Phalcon\Mvc\Model
         $symbols = new Symbols();
         $mySymbolsList = implode(',', $symbols->getFamous());
 
+        // get data from API
         $ExchangeRatesApi = new ExchangeRatesApi($API_KEY);
-        $result = $ExchangeRatesApi->fetch($baseCurrency, $mySymbolsList);
+        $ExchangeRatesApi->fetch($baseCurrency, $mySymbolsList);
+        $result = $ExchangeRatesApi->json();
 
 
         // Use Model for database Query
