@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Header } from "../organisms/Header";
 import BoardHeader from "../organisms/BoardHeader";
 import BoardLists from "../organisms/BoardLists";
 
@@ -7,6 +8,7 @@ function ExchangeTemplate(props) {
 
   return (
     <div className={pageStyle}>
+      <Header />
       <BoardHeader />
       <BoardLists data={props.data} />
     </div>
