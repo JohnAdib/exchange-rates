@@ -1,16 +1,15 @@
 {
   "files": {
-    "main.css": "/exchange-rates/static/css/main.fb249e9a.css",
-    "main.js": "/exchange-rates/static/js/main.41f5074c.js",
+    "main.css": "/exchange-rates/static/css/main.8f55c708.css",
+    "main.js": "/exchange-rates/static/js/main.afa2c963.js",
     "static/js/787.e7470584.chunk.js": "/exchange-rates/static/js/787.e7470584.chunk.js",
-    "static/media/phone-frame.svg": "/exchange-rates/static/media/phone-frame.53400f56cfb5285997516f64f7e0e26c.svg",
     "index.html": "/exchange-rates/index.html",
-    "main.fb249e9a.css.map": "/exchange-rates/static/css/main.fb249e9a.css.map",
-    "main.41f5074c.js.map": "/exchange-rates/static/js/main.41f5074c.js.map",
+    "main.8f55c708.css.map": "/exchange-rates/static/css/main.8f55c708.css.map",
+    "main.afa2c963.js.map": "/exchange-rates/static/js/main.afa2c963.js.map",
     "787.e7470584.chunk.js.map": "/exchange-rates/static/js/787.e7470584.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.fb249e9a.css",
-    "static/js/main.41f5074c.js"
+    "static/css/main.8f55c708.css",
+    "static/js/main.afa2c963.js"
   ]
 }
