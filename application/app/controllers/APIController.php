@@ -39,7 +39,8 @@ class APIController extends \Phalcon\Mvc\Controller
             $returnData = $exchange->load();
 
             // Set status code
-            $response->setStatusCode($returnData['status'], $returnData['error']);
+            // $response->setStatusCode($returnData['status'], $returnData['error']);
+            $response->setStatusCode(200, 'OK');
             // Set the content of the response
             $response->setJsonContent($returnData);
         } else {

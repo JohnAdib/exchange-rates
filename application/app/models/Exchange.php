@@ -21,34 +21,33 @@ class Exchange extends \Phalcon\Mvc\Model
         'JPY', 'CNY', 'RUB', 'IRR', 'AED', 'TRY', 'IQD', 'INR',
     ];
 
-    public function load1()
+    public function load()
     {
         $serializerFactory = new SerializerFactory();
         $adapterFactory    = new AdapterFactory($serializerFactory);
-
         $options = [
             'defaultSerializer' => 'Json',
-            'lifetime'          => 60 * 60 * 5 // 18000
+            'lifetime'          => 60 * 60 // 60 min
         ];
-
         $adapter = $adapterFactory->newInstance('apcu', $options);
-
         $cache = new Cache($adapter);
 
-
-        $cachedValue = $cache->get('apiData');
-
-        var_dump($cachedValue);
-
-        if (!cachedValue) {
-            $apiData = self::getDataFromApi();
-            $result = $cache->set('apiData', $apiData);
-            var_dump($result);
+        // cache each type of symbols
+        $cacheName = 'apiData-' . $this->getBase();
+        // read from cache
+        $cachedData = $cache->get($cacheName);
+        if (isset($cachedData)) {
+            return $cachedData;
         }
+        // read from api and cache it
+        $apiData = self::getDataFromApi();
+        $saveCachedResult = $cache->set($cacheName, $apiData);
+
+        return $apiData;
     }
 
 
-    public function load(): array
+    public function getDataFromApi(): array
     {
         $okay = true;
         $status = 200;
@@ -56,7 +55,6 @@ class Exchange extends \Phalcon\Mvc\Model
         $apiResult = null;
         $apiKey = $this->getApiKey();
         $baseCurrency = $this->getBase();
-
 
         try {
             // get data from API
@@ -71,7 +69,6 @@ class Exchange extends \Phalcon\Mvc\Model
             $error = $e->getMessage();
         }
 
-
         $returnData = [
             "okay" => $okay,
             "status" => $status,
@@ -79,7 +76,6 @@ class Exchange extends \Phalcon\Mvc\Model
             "latest" => $apiResult,
             "symbols" => Symbols::getFiltered(self::SELECTED_SYMBOLS),
         ];
-
         return $returnData;
     }
 
@@ -88,7 +84,6 @@ class Exchange extends \Phalcon\Mvc\Model
         $request = new Request();
         $baseCurrency = $request->getQuery('base', null, 'USD');
         // $baseCurrency = 'USD';
-
         return $baseCurrency;
     }
 
@@ -106,7 +101,6 @@ class Exchange extends \Phalcon\Mvc\Model
 
             return $error;
         }
-
         return $Exchangerates_API_KEY;
     }
 }
