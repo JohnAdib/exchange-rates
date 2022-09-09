@@ -16,6 +16,7 @@ use xchange\ExchangeRatesApi;
 
 class Exchange extends \Phalcon\Mvc\Model
 {
+    const CACHE_TTL = 60 * 60; // 60 minute
     const SELECTED_SYMBOLS = [
         'USD', 'EUR', 'GBP', 'CHF', 'CAD', 'AUD',
         'JPY', 'CNY', 'RUB', 'IRR', 'AED', 'TRY', 'IQD', 'INR',
@@ -27,7 +28,7 @@ class Exchange extends \Phalcon\Mvc\Model
         $adapterFactory    = new AdapterFactory($serializerFactory);
         $options = [
             'defaultSerializer' => 'Json',
-            'lifetime'          => 60 * 60 // 60 min
+            'lifetime'          => self::CACHE_TTL
         ];
         $adapter = $adapterFactory->newInstance('apcu', $options);
         $cache = new Cache($adapter);
@@ -46,11 +47,12 @@ class Exchange extends \Phalcon\Mvc\Model
         }
         // read from api and cache it
         $apiData = self::getDataFromApi();
-        $saveCachedResult = $cache->set($cacheName, $apiData);
+        if ($apiData['okay'] === true) {
+            $saveCachedResult = $cache->set($cacheName, $apiData);
+        }
 
         return $apiData;
     }
-
 
     public function getDataFromApi(): array
     {
@@ -74,11 +76,21 @@ class Exchange extends \Phalcon\Mvc\Model
             $error = $e->getMessage();
         }
 
+        if (count($apiResult) === 1 && isset($apiResult["message"])) {
+            // error on api
+            $okay = false;
+            $status = 400;
+            $error = $apiResult["message"];
+        }
+        $expiredAtTimestamp = strtotime("+" . self::CACHE_TTL . " seconds");
+
         $returnData = [
             "okay" => $okay,
             "status" => $status,
             "error" => $error,
-            "lastUpdate" => date('Y-m-d H:i:s'),
+            "ttl" => self::CACHE_TTL,
+            "dateUpdate" => date('Y-m-d H:i:s'),
+            "dateExpire" => date('Y-m-d H:i:s', $expiredAtTimestamp),
             "latest" => $apiResult,
             "symbols" => Symbols::getFiltered(self::SELECTED_SYMBOLS),
         ];
