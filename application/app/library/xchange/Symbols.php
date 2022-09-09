@@ -177,35 +177,21 @@ class Symbols
         'ZWL' => 'Zimbabwean Dollar',
     ];
 
-
     public function getAll(): array
     {
         return self::SYMBOL_LIST;
     }
 
-
-    public function getFamous(): array
+    public static function isSymbolExist(string $symbol): bool
     {
-        $mySymbols = [
-            // recommended
-            'USD',
-            'EUR',
-            'GBP',
-            'CHF',
-            'CAD',
-            'AUD',
-            // others
-            'JPY',
-            'CNY',
-            'RUB',
-            'IRR',
-            'AED',
-            'TRY',
-            'IQD',
-            'INR',
-        ];
+        if (strlen($symbol) !== 3) {
+            return false;
+        }
 
-        return $mySymbols;
+        if (isset(self::SYMBOL_LIST[$symbol])) {
+            return true;
+        }
+        return false;
     }
 
     public function get(string $symbol): ?string

@@ -4,33 +4,73 @@ declare(strict_types=1);
 
 namespace xchange;
 
+use xchange\Symbols;
+
 abstract class AbstractExchangeApi
 {
-    protected string $apiKey;
-    protected string $response;
-    protected int $responseCode;
+    private string $apiKey;
+    private string $base = 'USD';
+    private array $symbols = [];
+    private string $symbolsCsv = "";
+    private string $response = "";
+    private int $responseCode = -1;
 
     public function __construct(string $apikey)
     {
         $this->apiKey = $apikey;
     }
 
-    public function response()
+    public function getApiKey(): ?string
+    {
+        return $this->apiKey;
+    }
+
+    public function getResponse(): ?string
     {
         return $this->response;
     }
 
-    public function responseCode()
+    public function getResponseCode(): ?int
     {
         return $this->responseCode;
     }
 
-    public function json(): array
+    public function getBase(): string
     {
-        if (!isset($this->response)) {
-            return [];
-        }
+        return $this->base;
+    }
 
+    public function setBase(string $base): void
+    {
+        if (Symbols::isSymbolExist($base)) {
+            $this->base = $base;
+        }
+    }
+
+    public function getSymbols(): ?array
+    {
+        return $this->symbols;
+    }
+
+    public function getSymbolsCsv(): ?string
+    {
+        return $this->symbolsCsv;
+    }
+
+    public function setSymbols(array $symbols)
+    {
+        $mySymbols = [];
+        foreach ($symbols as $value) {
+            if (Symbols::isSymbolExist($value)) {
+                array_push($mySymbols, $value);
+            }
+        }
+        $this->symbols = $mySymbols;
+        $this->symbolsCsv = implode(',', $mySymbols);
+    }
+
+    public function getResponseJson(): array
+    {
         $json = json_decode($this->response, true);
         if (is_array($json)) {
             return $json;
@@ -39,5 +79,5 @@ abstract class AbstractExchangeApi
         return [];
     }
 
-    abstract public function fetch(string $base, string $symbols): void;
+    abstract public function fetch(): void;
 }

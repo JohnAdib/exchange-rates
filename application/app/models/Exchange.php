@@ -9,22 +9,26 @@ use xchange\ExchangeRatesApi;
 
 class Exchange extends \Phalcon\Mvc\Model
 {
+    const SELECTED_SYMBOLS = [
+        'USD', 'EUR', 'GBP', 'CHF', 'CAD', 'AUD',
+        'JPY', 'CNY', 'RUB', 'IRR', 'AED', 'TRY', 'IQD', 'INR1',
+    ];
+
     public function load(string $API_KEY, string $baseCurrency): array
     {
-        $symbols = new Symbols();
-        $mySymbolsList = implode(',', $symbols->getFamous());
-
         // get data from API
         $ExchangeRatesApi = new ExchangeRatesApi($API_KEY);
-        $ExchangeRatesApi->fetch($baseCurrency, $mySymbolsList);
-        $result = $ExchangeRatesApi->json();
+        $ExchangeRatesApi->setBase($baseCurrency);
+        $ExchangeRatesApi->setSymbols(self::SELECTED_SYMBOLS);
+        $ExchangeRatesApi->fetch();
+        $result = $ExchangeRatesApi->getResponseJson();
 
 
         // Use Model for database Query
         $returnData = [
-            "base" => $baseCurrency,
-            "symbols" => $symbols->getFamous(),
-            "symbolsList" => $mySymbolsList,
+            "base" => $ExchangeRatesApi->getBase(),
+            "symbols" => $ExchangeRatesApi->getSymbols(),
+            // "symbolsList" => $mySymbolsList,
             "result" => $result
         ];
 
