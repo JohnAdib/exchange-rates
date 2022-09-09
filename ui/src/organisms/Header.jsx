@@ -1,125 +1,52 @@
-import Link from "next/link";
-import { Popover } from "@headlessui/react";
-import { AnimatePresence, motion } from "framer-motion";
+import React from "react";
 
-import { Button } from "../molecules/Button";
-import { Container } from "../molecules/Container";
-import { Logo } from "../molecules/Logo";
-import { NavLinks } from "../molecules/NavLinks";
+function MenuItem(title, link) {
+  const className =
+    "block cursor-alias px-2 lg:px-4 rounded bg-gray-50 bg-opacity-0 hover:bg-opacity-20 focus:bg-opacity-30 text-white transition";
 
-function MenuIcon(props) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
-      <path
-        d="M5 6h14M5 18h14M5 12h14"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function ChevronUpIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
-      <path d="M17 14l-5-5-5 5" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function MobileNavLink({ children, ...props }) {
-  return (
-    <Popover.Button
-      as={Link}
-      className="block text-base leading-7 tracking-tight text-gray-700"
-      {...props}
-    >
-      {children}
-    </Popover.Button>
+    <li>
+      <a className={className} href={link} target="_blank">
+        {title}
+      </a>
+    </li>
   );
 }
 
 export function Header() {
   return (
-    <header>
-      <nav>
-        <Container className="relative z-50 flex justify-between py-8">
-          <div className="relative z-10 flex items-center gap-16">
-            <Link href="/" aria-label="Home">
-              <Logo className="h-10 w-auto" />
-            </Link>
-            <div className="hidden lg:flex lg:gap-10">
-              <NavLinks />
-            </div>
-          </div>
-          <div className="flex items-center gap-6">
-            <Popover className="lg:hidden">
-              {({ open }) => (
-                <>
-                  <Popover.Button
-                    className="relative z-10 -m-2 inline-flex items-center rounded-lg stroke-gray-900 p-2 hover:bg-gray-200/50 hover:stroke-gray-600 active:stroke-gray-900 [&:not(:focus-visible)]:focus:outline-none"
-                    aria-label="Toggle site navigation"
-                  >
-                    {({ open }) =>
-                      open ? (
-                        <ChevronUpIcon className="h-6 w-6" />
-                      ) : (
-                        <MenuIcon className="h-6 w-6" />
-                      )
-                    }
-                  </Popover.Button>
-                  <AnimatePresence initial={false}>
-                    {open && (
-                      <>
-                        <Popover.Overlay
-                          static
-                          as={motion.div}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          className="fixed inset-0 z-0 bg-gray-300/60 backdrop-blur"
-                        />
-                        <Popover.Panel
-                          static
-                          as={motion.div}
-                          initial={{ opacity: 0, y: -32 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{
-                            opacity: 0,
-                            y: -32,
-                            transition: { duration: 0.2 }
-                          }}
-                          className="absolute inset-x-0 top-0 z-0 origin-top rounded-b-2xl bg-gray-50 px-6 pb-6 pt-32 shadow-2xl shadow-gray-900/20"
-                        >
-                          <div className="space-y-4">
-                            <MobileNavLink href="#features">Features</MobileNavLink>
-                            <MobileNavLink href="#reviews">Reviews</MobileNavLink>
-                            <MobileNavLink href="#pricing">Pricing</MobileNavLink>
-                            <MobileNavLink href="#faqs">FAQs</MobileNavLink>
-                          </div>
-                          <div className="mt-8 flex flex-col gap-4">
-                            <Button href="/login" variant="outline">
-                              Log in
-                            </Button>
-                            <Button href="#">Download the app</Button>
-                          </div>
-                        </Popover.Panel>
-                      </>
-                    )}
-                  </AnimatePresence>
-                </>
-              )}
-            </Popover>
-            <Button href="/login" variant="outline" className="hidden lg:block">
-              Log in
-            </Button>
-            <Button href="#" className="hidden lg:block">
-              Download
-            </Button>
-          </div>
-        </Container>
-      </nav>
+    <header className="mx-auto max-w-screen-xl w-full px-2 sm:px-4 lg:px-5 pt-2 md:pt-4 select-none">
+      <div className="flex flex-wrap lg:flex-nowrap align-center rounded-lg relative py-2 px-4 lg:py-4 lg:px-6overflow-hidden bg-[#06b6d4]">
+        <a
+          target="_blank"
+          href="https://mradib.com"
+          className="block siteLogo rounded-lg overflow-hidden order-first basis-3/5 md:basis-4/5 lg:basis-auto lg:grow-0 shrink-0"
+        >
+          <h1 className="text-white text-xl leading-10 font-light hover:text-blue-200 transition">
+            MrAdib
+          </h1>
+        </a>
+        <nav className="lg:px-6 text-sm justify-start order-2 mt-2 lg:mt-0">
+          <ul className="flex flex-wrap md:flex-nowrap gap-1 md:gap-2 justify-center leading-8 md:leading-10">
+            {MenuItem("API", "http://localhost/api")}
+            {MenuItem("From Euro", "http://localhost/api/latest?base=EUR")}
+          </ul>
+        </nav>
+        <div className="lg:flex-grow order-3"></div>
+        <nav className="social flex basis-2/5 md:basis-1/5 lg:basis-auto lg:grow-0 shrink-0 order-1 lg:order-last text-left">
+          <ul className="flex justify-center leading-10 w-full">
+            <li className="w-full">
+              <a
+                target="_blank"
+                className="block px-2 lg:px-4 text-center rounded bg-gray-800 hover:bg-opacity-70 focus:bg-opacity-50 text-white transition link-"
+                href="https://github.com/MrJavadAdib/exchange-rates"
+              >
+                Github
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </header>
   );
 }
