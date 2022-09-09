@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import Widget from "./Widget";
+import ExchangeRates from "./pages/ExchangeRates";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Widget />
+    <ExchangeRates />
   </React.StrictMode>
 );
 
