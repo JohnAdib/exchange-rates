@@ -11,6 +11,6 @@
          stopOnFailure="false">
 
     <testsuite name="Phalcon - Unit Test">
-        <directory>./tests/Unit</directory>
+        <directory>./application/tests/Unit</directory>
     </testsuite>
 </phpunit>
