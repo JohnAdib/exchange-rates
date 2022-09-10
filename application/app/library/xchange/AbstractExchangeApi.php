@@ -4,18 +4,24 @@ declare(strict_types=1);
 
 namespace xchange;
 
-use xchange\Symbols;
+use Exception;
 
 abstract class AbstractExchangeApi
 {
     private string $apiKey;
     private string $base = 'USD';
-    private array $symbols = [];
-    private string $symbolsCsv = "";
+    private string $symbols = "";
     protected string $response = "";
     protected int $responseCode = -1;
 
-    public function __construct(string $apikey)
+    public function __construct(string $apikey, string $base, array $symbols)
+    {
+        $this->setApiKey($apikey);
+        $this->setBase($base);
+        $this->setSymbols($symbols);
+    }
+
+    public function setApiKey(string $apikey): void
     {
         $this->apiKey = $apikey;
     }
@@ -25,21 +31,6 @@ abstract class AbstractExchangeApi
         return $this->apiKey;
     }
 
-    public function getResponse(): ?string
-    {
-        return $this->response;
-    }
-
-    public function getResponseCode(): ?int
-    {
-        return $this->responseCode;
-    }
-
-    public function getBase(): string
-    {
-        return $this->base;
-    }
-
     public function setBase(string $base): void
     {
         if (Symbols::isSymbolExist($base)) {
@@ -47,14 +38,9 @@ abstract class AbstractExchangeApi
         }
     }
 
-    public function getSymbols(): ?array
+    public function getBase(): string
     {
-        return $this->symbols;
-    }
-
-    public function getSymbolsCsv(): ?string
-    {
-        return $this->symbolsCsv;
+        return $this->base;
     }
 
     public function setSymbols(array $symbols)
@@ -62,23 +48,29 @@ abstract class AbstractExchangeApi
         $mySymbols = [];
         foreach ($symbols as $value) {
             if (Symbols::isSymbolExist($value)) {
-                array_push($mySymbols, $value);
+                $mySymbols[] = $value;
             }
         }
-        $this->symbols = $mySymbols;
-        $this->symbolsCsv = implode(',', $mySymbols);
+        $this->symbols = implode(',', $mySymbols);
     }
 
+    public function getSymbols(): ?string
+    {
+        return $this->symbols;
+    }
+
+    /**
+     * @throws Exception
+     */
     public function getResponseJson(): array
     {
         $json = json_decode($this->response, true);
         if (is_array($json)) {
             return $json;
         }
-
         $errorMsg = "API response is invalid - Header code " . $this->responseCode;
-        throw new \Exception($errorMsg);
+        throw new Exception($errorMsg);
     }
 
-    abstract public function fetch(): void;
+    abstract public function fetch(): array;
 }

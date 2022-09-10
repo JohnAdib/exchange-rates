@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace xchange;
 
+use Exception;
+
 class ExchangeRatesApi extends AbstractExchangeApi
 {
     private const BASE_URL = "https://api.apilayer.com/exchangerates_data/";
 
-    public function fetch(): void
+    /**
+     * @throws Exception
+     */
+    public function fetch(): array
     {
         $targetUrl = self::BASE_URL . "latest";
         $targetUrl .= "?" . "base=" . $this->getBase();
-        $targetUrl .= "&" . "symbols=" . $this->getSymbolsCsv();
+        $targetUrl .= "&" . "symbols=" . $this->getSymbols();
 
         $curl = curl_init();
         curl_setopt_array(
@@ -24,7 +29,6 @@ class ExchangeRatesApi extends AbstractExchangeApi
                     "Content-Type: text/plain",
                     "apikey: " . $this->getApiKey()
                 ],
-                // CURLOPT_HEADER         => true,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING       => "",
                 CURLOPT_MAXREDIRS      => 10,
@@ -38,5 +42,7 @@ class ExchangeRatesApi extends AbstractExchangeApi
         $this->responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);
+
+        return $this->getResponseJson();
     }
 }

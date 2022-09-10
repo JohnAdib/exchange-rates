@@ -17,5 +17,9 @@
     "psr-4": {
       "Tests\\": "tests"
     }
+  },
+  "require": {
+    "ext-json": "*",
+    "ext-curl": "*"
   }
 }

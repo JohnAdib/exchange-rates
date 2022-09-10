@@ -9,15 +9,15 @@ use Phalcon\Config;
 use Phalcon\Http\Request;
 use Phalcon\Cache;
 use Phalcon\Cache\AdapterFactory;
+use Phalcon\Mvc\Model;
 use Phalcon\Storage\SerializerFactory;
 use xchange\Symbols;
 use xchange\ExchangeRatesApi;
 
-
-class Exchange extends \Phalcon\Mvc\Model
+class Exchange extends Model
 {
     const CACHE_TTL = 60 * 60; // 60 minute
-    const SELECTED_SYMBOLS = [
+    const SYMBOLS = [
         'USD', 'EUR', 'GBP', 'CHF', 'CAD', 'AUD',
         'JPY', 'CNY', 'RUB', 'IRR', 'AED', 'TRY', 'IQD', 'INR',
     ];
@@ -48,7 +48,7 @@ class Exchange extends \Phalcon\Mvc\Model
         // read from api and cache it
         $apiData = self::getDataFromApi();
         if ($apiData['okay'] === true) {
-            $saveCachedResult = $cache->set($cacheName, $apiData);
+            $cache->set($cacheName, $apiData);
         }
 
         return $apiData;
@@ -65,11 +65,8 @@ class Exchange extends \Phalcon\Mvc\Model
             $apiKey = $this->getApiKey();
             $baseCurrency = $this->getBase();
             // get data from API
-            $ExchangeRatesApi = new ExchangeRatesApi($apiKey);
-            $ExchangeRatesApi->setBase($baseCurrency);
-            $ExchangeRatesApi->setSymbols(self::SELECTED_SYMBOLS);
-            $ExchangeRatesApi->fetch();
-            $apiResult = $ExchangeRatesApi->getResponseJson();
+            $ExchangeRatesApi = new ExchangeRatesApi($apiKey, $baseCurrency, self::SYMBOLS);
+            $apiResult = $ExchangeRatesApi->fetch();
         } catch (\Exception $e) {
             $okay = false;
             $status = 400;
@@ -84,7 +81,7 @@ class Exchange extends \Phalcon\Mvc\Model
         }
         $expiredAtTimestamp = strtotime("+" . self::CACHE_TTL . " seconds");
 
-        $returnData = [
+        return [
             "okay" => $okay,
             "status" => $status,
             "error" => $error,
@@ -92,9 +89,8 @@ class Exchange extends \Phalcon\Mvc\Model
             "dateUpdate" => date('Y-m-d H:i:s'),
             "dateExpire" => date('Y-m-d H:i:s', $expiredAtTimestamp),
             "latest" => $apiResult,
-            "symbols" => Symbols::getFiltered(self::SELECTED_SYMBOLS),
+            "symbols" => Symbols::getFiltered(self::SYMBOLS),
         ];
-        return $returnData;
     }
 
     private function getBase(): string
@@ -112,19 +108,18 @@ class Exchange extends \Phalcon\Mvc\Model
     private function getForce(): string
     {
         $request = new Request();
-        $forceMode = $request->getQuery('force', null, "");
-        return $forceMode;
+        return $request->getQuery('force', null, "");
     }
 
 
     private function getApiKey(): string
     {
         $config = Di::getDefault()->getShared('config');
-        $Exchangerates_API_KEY = $config->application->EXCHANGERATES_API_KEY;
+        $myApikey = $config->application->EXCHANGERATES_API_KEY;
 
-        if (!$Exchangerates_API_KEY) {
+        if (!$myApikey) {
             throw new \Exception('Not Acceptable - API KEY NOT FOUND');
         }
-        return $Exchangerates_API_KEY;
+        return $myApikey;
     }
 }
