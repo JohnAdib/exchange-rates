@@ -10,20 +10,24 @@ class ExchangeRatesApi extends AbstractExchangeApi
 {
     private const BASE_URL = "https://api.apilayer.com/exchangerates_data/";
 
+    private function targetUrl(): string
+    {
+        $targetUrl = self::BASE_URL . "latest";
+        $targetUrl .= "?" . "base=" . $this->getBase();
+        $targetUrl .= "&" . "symbols=" . $this->getSymbols();
+        return $targetUrl;
+    }
+
     /**
      * @throws Exception
      */
     public function fetch(): array
     {
-        $targetUrl = self::BASE_URL . "latest";
-        $targetUrl .= "?" . "base=" . $this->getBase();
-        $targetUrl .= "&" . "symbols=" . $this->getSymbols();
-
         $curl = curl_init();
         curl_setopt_array(
             $curl,
             [
-                CURLOPT_URL        => $targetUrl,
+                CURLOPT_URL        => $this->targetUrl(),
                 CURLOPT_HTTPHEADER =>
                 [
                     "Content-Type: text/plain",
@@ -38,8 +42,8 @@ class ExchangeRatesApi extends AbstractExchangeApi
                 CURLOPT_CUSTOMREQUEST  => "GET"
             ]
         );
-        $this->response = curl_exec($curl);
-        $this->responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $this->setResponse(curl_exec($curl));
+        $this->setResponseCode(curl_getinfo($curl, CURLINFO_HTTP_CODE));
 
         curl_close($curl);
 

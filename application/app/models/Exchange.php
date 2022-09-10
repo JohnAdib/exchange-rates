@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace models;
 
+use Exception;
 use Phalcon\Di;
-use Phalcon\Config;
 use Phalcon\Http\Request;
 use Phalcon\Cache;
 use Phalcon\Cache\AdapterFactory;
@@ -32,25 +32,18 @@ class Exchange extends Model
         ];
         $adapter = $adapterFactory->newInstance('apcu', $options);
         $cache = new Cache($adapter);
-
-        // cache each type of symbols
         $cacheName = 'apiData-' . $this->getBase();
-
-        // if request force mode, delete cache
         if ($this->getForce()) {
             $cache->delete($cacheName);
         }
-        // read from cache
         $cachedData = $cache->get($cacheName);
         if (isset($cachedData)) {
             return $cachedData;
         }
-        // read from api and cache it
         $apiData = self::getDataFromApi();
         if ($apiData['okay'] === true) {
             $cache->set($cacheName, $apiData);
         }
-
         return $apiData;
     }
 
@@ -60,19 +53,17 @@ class Exchange extends Model
         $status = 200;
         $error = false;
         $apiResult = null;
-
         try {
             $apiKey = $this->getApiKey();
             $baseCurrency = $this->getBase();
             // get data from API
-            $ExchangeRatesApi = new ExchangeRatesApi($apiKey, $baseCurrency, self::SYMBOLS);
-            $apiResult = $ExchangeRatesApi->fetch();
-        } catch (\Exception $e) {
+            $exchangeRatesApi = new ExchangeRatesApi($apiKey, $baseCurrency, self::SYMBOLS);
+            $apiResult = $exchangeRatesApi->fetch();
+        } catch (Exception $e) {
             $okay = false;
             $status = 400;
             $error = $e->getMessage();
         }
-
         if (count($apiResult) === 1 && isset($apiResult["message"])) {
             // error on api
             $okay = false;
@@ -80,7 +71,6 @@ class Exchange extends Model
             $error = $apiResult["message"];
         }
         $expiredAtTimestamp = strtotime("+" . self::CACHE_TTL . " seconds");
-
         return [
             "okay" => $okay,
             "status" => $status,
@@ -97,11 +87,9 @@ class Exchange extends Model
     {
         $request = new Request();
         $baseCurrency = $request->getQuery('base', null, 'USD');
-
         if (!Symbols::isSymbolExist($baseCurrency)) {
             $baseCurrency = "USD";
         }
-
         return strtoupper($baseCurrency);
     }
 
@@ -111,14 +99,15 @@ class Exchange extends Model
         return $request->getQuery('force', null, "");
     }
 
-
+    /**
+     * @throws Exception
+     */
     private function getApiKey(): string
     {
         $config = Di::getDefault()->getShared('config');
         $myApikey = $config->application->EXCHANGERATES_API_KEY;
-
         if (!$myApikey) {
-            throw new \Exception('Not Acceptable - API KEY NOT FOUND');
+            throw new Exception('Not Acceptable - API KEY NOT FOUND');
         }
         return $myApikey;
     }
