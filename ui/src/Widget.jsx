@@ -27,7 +27,6 @@ export default function Widget(props) {
           },
           (error) => {
             setIsLoaded(true);
-            setReloading(false);
             setApiData(SampleData);
             setError(error);
           }
@@ -54,16 +53,16 @@ export default function Widget(props) {
       return "";
     }
     return (
-      <li key={currency} className="flex px-4 hover:bg-black/10 transition" title={currency}>
-        <div
-          className="font-light cursor-pointer truncate"
-          onClick={() => {
-            setBaseCurrency(currency);
-            setReloading(true);
-          }}
-        >
-          {apiData.symbols[currency]}
-        </div>
+      <li
+        key={currency}
+        className="flex px-4 hover:bg-black/10 transition cursor-pointer"
+        title={currency}
+        onClick={() => {
+          setBaseCurrency(currency);
+          setReloading(true);
+        }}
+      >
+        <div className="font-light truncate">{apiData.symbols[currency]}</div>
         <div className="grow"></div>
         <div className="">{reloading ? "-" : exchangeRateShow}</div>
       </li>
@@ -116,7 +115,7 @@ export default function Widget(props) {
         className="px-4 rounded flex flex-nowrap gap-2 truncate leading-10 text-xs bg-gray-100 text-gray-500"
         title={footerTitle}
       >
-        <div className="grow">{footerText}</div>
+        <div className="grow truncate">{footerText}</div>
         <div className="flex-none py-1">
           <UrgeWithPleasureComponent></UrgeWithPleasureComponent>
         </div>
