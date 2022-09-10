@@ -6,5 +6,12 @@ use Phalcon\Mvc\Controller;
 
 class ControllerBase extends Controller
 {
-    // Implement common logic
+    public function initialize()
+    {
+        // Disable View File Content
+        $this->view->disable();
+
+        // enable CORS
+        $this->response->setHeader('Access-Control-Allow-Origin', '*');
+    }
 }

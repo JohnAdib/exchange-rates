@@ -10,7 +10,8 @@
   "require-dev": {
     "phalcon/devtools": "^4.2",
     "phpunit/phpunit": "^9.0",
-    "phalcon/incubator-test": "^v1.0.0-alpha.1"
+    "phalcon/incubator-test": "^v1.0.0-alpha.1",
+    "phalcon/ide-stubs": "^4.1"
   },
   "autoload-dev": {
     "psr-4": {
