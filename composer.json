@@ -1,0 +1,13 @@
+{
+  "name": "mradib/exchange-rates",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Javad Adib"
+    }
+  ],
+  "require-dev": {
+    "phalcon/devtools": "^4.2"
+  }
+}
