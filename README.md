@@ -90,3 +90,54 @@ go to ui folder, run below command
 `npm run storybook`
 
 Browser automatically open link to <http://localhost:6006/>
+
+## Sample output of API for USD
+
+```
+{
+  "okay": true,
+  "status": 200,
+  "error": false,
+  "ttl": 3600,
+  "dateUpdate": "2022-09-10 00:25:33",
+  "dateExpire": "2022-09-10 01:25:33",
+  "latest": {
+    "success": true,
+    "timestamp": 1662769512,
+    "base": "EUR",
+    "date": "2022-09-10",
+    "rates": {
+      "USD": 1.015176,
+      "EUR": 1,
+      "GBP": 0.875077,
+      "CHF": 0.973523,
+      "CAD": 1.323388,
+      "AUD": 1.482209,
+      "JPY": 144.667762,
+      "CNY": 7.031624,
+      "RUB": 61.707607,
+      "IRR": 43043.482408,
+      "AED": 3.728849,
+      "TRY": 18.513168,
+      "IQD": 1482.157637,
+      "INR": 80.864948
+    }
+  },
+  "symbols": {
+    "USD": "United States Dollar",
+    "EUR": "Euro",
+    "GBP": "British Pound Sterling",
+    "CHF": "Swiss Franc",
+    "CAD": "Canadian Dollar",
+    "AUD": "Australian Dollar",
+    "JPY": "Japanese Yen",
+    "CNY": "Chinese Yuan",
+    "RUB": "Russian Ruble",
+    "IRR": "Iranian Rial",
+    "AED": "United Arab Emirates Dirham",
+    "TRY": "Turkish Lira",
+    "IQD": "Iraqi Dinar",
+    "INR": "Indian Rupee"
+  }
+}
+```
