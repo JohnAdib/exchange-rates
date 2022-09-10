@@ -83,8 +83,10 @@ Backend tests written with PHPUnit. To run tests on backend, use below command
 
 `phpunit`
 
-## Run frontend Storybook
+### Run frontend Storybook
 
 go to ui folder, run below command
 
 `npm run storybook`
+
+Browser automatically open link to <http://localhost:6006/>

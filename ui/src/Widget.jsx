@@ -5,6 +5,7 @@ import { CountdownCircleTimer } from "react-countdown-circle-timer";
 export default function Widget(props) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [reloading, setReloading] = useState(false);
   const [apiData, setApiData] = useState([]);
   const [baseCurrency, setBaseCurrency] = useState("USD");
 
@@ -20,11 +21,13 @@ export default function Widget(props) {
         .then(
           (result) => {
             setIsLoaded(true);
+            setReloading(false);
             setApiData(result);
             console.log(result);
           },
           (error) => {
             setIsLoaded(true);
+            setReloading(false);
             setApiData(SampleData);
             setError(error);
           }
@@ -53,14 +56,16 @@ export default function Widget(props) {
     return (
       <li key={currency} className="flex px-4 hover:bg-black/10 transition" title={currency}>
         <div
-          className="grow font-light cursor-pointer truncate"
+          className="font-light cursor-pointer truncate"
           onClick={() => {
             setBaseCurrency(currency);
+            setReloading(true);
           }}
         >
           {apiData.symbols[currency]}
         </div>
-        <div className="">{exchangeRateShow}</div>
+        <div className="grow"></div>
+        <div className="">{reloading ? "-" : exchangeRateShow}</div>
       </li>
     );
   });
