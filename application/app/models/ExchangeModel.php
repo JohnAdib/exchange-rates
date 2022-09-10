@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace models;
 
 use Exception;
-use Phalcon\Di;
-use Phalcon\Http\Request;
 use Phalcon\Cache;
 use Phalcon\Cache\AdapterFactory;
 use Phalcon\Mvc\Model;
 use Phalcon\Storage\SerializerFactory;
+use library\EnvHelper;
+use library\UrlHelper;
 use xchange\Symbols;
 use xchange\ExchangeRatesApi;
 
@@ -32,8 +32,10 @@ class Exchange extends Model
         ];
         $adapter = $adapterFactory->newInstance('apcu', $options);
         $cache = new Cache($adapter);
-        $cacheName = 'apiData-' . $this->getBase();
-        if ($this->getForce()) {
+
+        $urlHelper = new UrlHelper();
+        $cacheName = 'apiData-' . $urlHelper->getParam('base');
+        if ($urlHelper->getParam('force')) {
             $cache->delete($cacheName);
         }
         $cachedData = $cache->get($cacheName);
@@ -51,64 +53,33 @@ class Exchange extends Model
     {
         $okay = true;
         $status = 200;
-        $error = false;
+        $msg = "OK";
         $apiResult = null;
         try {
-            $apiKey = $this->getApiKey();
-            $baseCurrency = $this->getBase();
-            // get data from API
-            $exchangeRatesApi = new ExchangeRatesApi($apiKey, $baseCurrency, self::SYMBOLS);
-            $apiResult = $exchangeRatesApi->fetch();
+            $apikey = (new EnvHelper)->getApiKey();
+            $baseCurrency = (new UrlHelper())->getParam('base');
+            $api = new ExchangeRatesApi($apikey, self::SYMBOLS, $baseCurrency);
+            $apiResult = $api->fetch();
         } catch (Exception $e) {
             $okay = false;
-            $status = 400;
-            $error = $e->getMessage();
+            $status = 506;
+            $msg = $e->getMessage();
         }
-        if (count($apiResult) === 1 && isset($apiResult["message"])) {
-            // error on api
+        if (is_array($apiResult) && count($apiResult) === 1 && isset($apiResult["message"])) {
             $okay = false;
             $status = 400;
-            $error = $apiResult["message"];
+            $msg = $apiResult["message"];
         }
         $expiredAtTimestamp = strtotime("+" . self::CACHE_TTL . " seconds");
         return [
             "okay" => $okay,
             "status" => $status,
-            "error" => $error,
+            "msg" => $msg,
             "ttl" => self::CACHE_TTL,
             "dateUpdate" => date('Y-m-d H:i:s'),
             "dateExpire" => date('Y-m-d H:i:s', $expiredAtTimestamp),
             "latest" => $apiResult,
             "symbols" => Symbols::getFiltered(self::SYMBOLS),
         ];
-    }
-
-    private function getBase(): string
-    {
-        $request = new Request();
-        $baseCurrency = $request->getQuery('base', null, 'USD');
-        if (!Symbols::isSymbolExist($baseCurrency)) {
-            $baseCurrency = "USD";
-        }
-        return strtoupper($baseCurrency);
-    }
-
-    private function getForce(): string
-    {
-        $request = new Request();
-        return $request->getQuery('force', null, "");
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getApiKey(): string
-    {
-        $config = Di::getDefault()->getShared('config');
-        $myApikey = $config->application->EXCHANGERATES_API_KEY;
-        if (!$myApikey) {
-            throw new Exception('Not Acceptable - API KEY NOT FOUND');
-        }
-        return $myApikey;
     }
 }
