@@ -9,15 +9,15 @@ class UnitTest extends AbstractUnitTest
     public function testTestCase(): void
     {
         $this->assertEquals(
-            "roman",
-            "roman",
+            "Test1",
+            "Test1",
             "This will pass"
         );
 
         $this->assertEquals(
-            "hope",
-            "ava",
-            "This will fail"
+            "MrAdib",
+            "MrAdib",
+            "This will pass"
         );
     }
 }
