@@ -81,7 +81,7 @@ Browser automatically open a new link to <http://localhost:3000>
 
 Backend tests written with PHPUnit. To run tests on backend, use below command
 
-`phpunit`
+`docker-compose exec app vendor/bin/phpunit`
 
 ### Run frontend Storybook
 

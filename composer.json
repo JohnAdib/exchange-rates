@@ -8,6 +8,8 @@
     }
   ],
   "require-dev": {
-    "phalcon/devtools": "^4.2"
+    "phalcon/devtools": "^4.2",
+    "phpunit/phpunit": "^9.0",
+    "phalcon/incubator-test": "^v1.0.0-alpha.1"
   }
 }
