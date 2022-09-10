@@ -11,5 +11,10 @@
     "phalcon/devtools": "^4.2",
     "phpunit/phpunit": "^9.0",
     "phalcon/incubator-test": "^v1.0.0-alpha.1"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests"
+    }
   }
 }
