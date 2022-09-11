@@ -13,5 +13,6 @@ class ControllerBase extends Controller
 
         // enable CORS
         $this->response->setHeader('Access-Control-Allow-Origin', '*');
+        $this->response->setHeader('X-POWERED-BY', 'MrAdib');
     }
 }

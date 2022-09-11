@@ -26,6 +26,6 @@ return new \Phalcon\Config([
         'libraryDir'     => APP_PATH . '/library/',
         'cacheDir'       => BASE_PATH . '/cache/',
         'baseUri'        => '/',
-        'EXCHANGERATES_API_KEY'      => getenv('EXCHANGERATES_API_KEY'),
+        'ExchangeRateApikey'      => getenv('EXCHANGERATES_API_KEY'),
     ]
 ]);

@@ -6,7 +6,6 @@ class IndexController extends ControllerBase
 {
     public function indexAction()
     {
-        // redirect root to api
         $this->response->redirect('/api');
     }
 }

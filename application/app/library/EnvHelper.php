@@ -13,7 +13,7 @@ class EnvHelper
     public function getApiKey(): string
     {
         $config = Di::getDefault()->getShared('config');
-        $myApikey = $config->application->EXCHANGERATES_API_KEY;
+        $myApikey = $config->application->ExchangeRateApikey;
         if (!$myApikey) {
             throw new Exception('Not Acceptable - API KEY NOT FOUND');
         }
