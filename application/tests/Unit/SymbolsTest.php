@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use xchange\Symbols;
+use library\xchange\Symbols;
 
 class SymbolsTest extends AbstractUnitTest
 {

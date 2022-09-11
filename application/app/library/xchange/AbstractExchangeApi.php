@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace xchange;
+namespace library\xchange;
 
 use Exception;
 
@@ -14,7 +14,7 @@ abstract class AbstractExchangeApi
     private string $response = "";
     private int $responseCode = -1;
 
-    public function __construct(string $apikey, string $base, array $symbols)
+    public function __construct(string $apikey, array $symbols, ?string $base = "USD")
     {
         $this->setApiKey($apikey);
         $this->setBase($base);
@@ -31,9 +31,9 @@ abstract class AbstractExchangeApi
         return $this->apiKey;
     }
 
-    protected function setBase(string $base): void
+    protected function setBase(?string $base): void
     {
-        if (Symbols::isSymbolExist($base)) {
+        if ($base && Symbols::isSymbolExist($base)) {
             $this->base = $base;
         }
     }
@@ -43,7 +43,7 @@ abstract class AbstractExchangeApi
         return $this->base;
     }
 
-    protected function setSymbols(array $symbols)
+    protected function setSymbols(array $symbols): void
     {
         $mySymbols = [];
         foreach ($symbols as $value) {
@@ -71,12 +71,12 @@ abstract class AbstractExchangeApi
 
     protected function setResponseCode(int $responseCode): void
     {
-        $this->$responseCode = $responseCode;
+        $this->responseCode = $responseCode;
     }
 
-    protected function getResponseCode(): string
+    protected function getResponseCode(): int
     {
-        return $this->response;
+        return $this->responseCode;
     }
 
     /**

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace xchange;
+namespace library\xchange;
 
 class Symbols
 {
@@ -187,7 +187,6 @@ class Symbols
         if (strlen($symbol) !== 3) {
             return false;
         }
-
         if (isset(self::SYMBOL_LIST[$symbol])) {
             return true;
         }
@@ -199,20 +198,17 @@ class Symbols
         if (isset(self::SYMBOL_LIST[$symbol])) {
             return self::SYMBOL_LIST[$symbol];
         }
-
         return null;
     }
 
     public static function getFiltered(array $whitelist): ?array
     {
         $result = [];
-
         foreach ($whitelist as $value) {
             if (isset(self::SYMBOL_LIST[$value])) {
                 $result[$value] = self::SYMBOL_LIST[$value];
             }
         }
-
         return $result;
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace xchange;
+namespace library\xchange;
 
 use Exception;
 
@@ -44,9 +44,7 @@ class ExchangeRatesApi extends AbstractExchangeApi
         );
         $this->setResponse(curl_exec($curl));
         $this->setResponseCode(curl_getinfo($curl, CURLINFO_HTTP_CODE));
-
         curl_close($curl);
-
         return $this->getResponseJson();
     }
 }

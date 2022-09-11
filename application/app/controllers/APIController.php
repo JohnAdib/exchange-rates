@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Phalcon\Http\Response;
 use Phalcon\Http\Request;
-use models\Exchange;
+use models\ExchangeModel;
 
 class APIController extends ControllerBase
 {
@@ -14,10 +14,8 @@ class APIController extends ControllerBase
         $request = new Request();
 
         if ($request->isGet()) {
-            $exchange = new Exchange();
-            $returnData = $exchange->load();
-
-            $response->setStatusCode(200, 'OK');
+            $returnData = (new ExchangeModel())->load();
+            $response->setStatusCode($returnData->status, $returnData->msg);
             $response->setJsonContent($returnData);
         } else {
             $response->setStatusCode(405, 'Method Not Allowed');

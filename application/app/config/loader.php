@@ -1,13 +1,16 @@
 <?php
 
+use Phalcon\Loader;
+
 ini_set("display_errors", true);
 
-$loader = new \Phalcon\Loader();
+$loader = new Loader();
 
 $loader->registerNamespaces(
     [
         "models" => $config->application->modelsDir,
-        "xchange" => $config->application->libraryDir . 'xchange/'
+        "library" => $config->application->libraryDir,
+        "library/xchange" => $config->application->libraryDir . 'xchange/'
     ]
 );
 
