@@ -46,8 +46,8 @@ class ExchangeModel extends Model
         $result->status = 200;
         $result->msg = "OK";
         $result->ttl = self::CACHE_TTL;
-        $result->dataUpdate = date('Y-m-d H:i:s');
-        $result->dataExpire = date('Y-m-d H:i:s', strtotime("+" . self::CACHE_TTL * 60 . " seconds"));
+        $result->dateUpdate = date('Y-m-d H:i:s');
+        $result->dateExpire = date('Y-m-d H:i:s', strtotime("+" . self::CACHE_TTL * 60 . " seconds"));
         $result->latest = null;
         $result->symbols = Symbols::getFiltered(self::SYMBOLS);
         try {
