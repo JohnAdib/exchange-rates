@@ -8,6 +8,7 @@ $loader = new Loader();
 
 $loader->registerNamespaces(
     [
+        'Phalcon' => BASE_PATH.'/vendor/incubator/Library/Phalcon/',
         "models" => $config->application->modelsDir,
         "library" => $config->application->libraryDir,
         "library/xchange" => $config->application->libraryDir . 'xchange/'
