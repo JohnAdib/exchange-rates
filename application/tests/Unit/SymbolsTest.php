@@ -15,16 +15,16 @@ class SymbolsTest extends AbstractUnitTest
 
     public function testAllSymbols(): void
     {
-        $allSymboles = Symbols::getAll();
+        $allSymbols = Symbols::getAll();
 
-        $this->assertIsArray($allSymboles);
-        $this->assertArrayHasKey('USD', $allSymboles);
+        $this->assertIsArray($allSymbols);
+        $this->assertArrayHasKey('USD', $allSymbols);
     }
 
     public function testTestCase(): void
     {
-        $mySymols = Symbols::getFiltered(self::SELECTED_SYMBOLS);
+        $mySymbols = Symbols::getFiltered(self::SELECTED_SYMBOLS);
 
-        $this->assertIsArray($mySymols);
+        $this->assertIsArray($mySymbols);
     }
 }
